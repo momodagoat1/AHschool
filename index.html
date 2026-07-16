@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Video App</title>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+
+<style>
+html, body{
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    background:#0b152d;
+    font-family:Arial,sans-serif;
+}
+
+canvas{
+    display:block;
+}
+
+.ui{
+    position:absolute;
+    top:20px;
+    left:20px;
+    z-index:1000;
+}
+
+button{
+    padding:12px 18px;
+    font-size:15px;
+    font-weight:bold;
+    margin-right:10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<div class="ui">
+    <button onclick="playBoiled()">The Boiled One</button>
+    <button onclick="playBath()">The Boy and the Bath</button>
+</div>
+
+<script>
+
+let boiled;
+let bath;
+let current=null;
+
+function setup(){
+
+    createCanvas(windowWidth,windowHeight);
+
+    boiled=createVideo("boiled_one.mp4");
+    boiled.hide();
+    boiled.volume(0);
+
+    bath=createVideo("boy_bath.mp4");
+    bath.hide();
+    bath.volume(0);
+
+}
+
+function draw(){
+
+    background(10,20,40);
+
+    if(current){
+
+        image(current,0,0,width,height);
+
+    }else{
+
+        fill(255);
+        textAlign(CENTER,CENTER);
+        textSize(30);
+        text("Choose a video",width/2,height/2);
+
+    }
+
+}
+
+function playBoiled(){
+
+    bath.stop();
+
+    boiled.time(0);
+    boiled.loop();
+
+    current=boiled;
+
+}
+
+function playBath(){
+
+    boiled.stop();
+
+    bath.time(0);
+    bath.loop();
+
+    current=bath;
+
+}
+
+function windowResized(){
+
+    resizeCanvas(windowWidth,windowHeight);
+
+}
+
+</script>
+
+</body>
+</html>
