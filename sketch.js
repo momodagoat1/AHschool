@@ -44,16 +44,24 @@ function draw() {
 }
 
 function playVid1() {
+function playVid1() {
   if (currentVid) currentVid.stop();
   currentVid = vid1;
+  
+  // Explicitly tell the browser to play after the button click
+  currentVid.play(); 
   currentVid.loop();
 }
 
 function playVid2() {
   if (currentVid) currentVid.stop();
   currentVid = vid2;
+  
+  // Explicitly tell the browser to play after the button click
+  currentVid.play(); 
   currentVid.loop();
 }
+
 
 function styleButton(btn) {
   btn.style('padding', '10px 15px');
