@@ -13,27 +13,101 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-color: #0b152d !important; /* The dark blue background */
+        background-color: #0b152d !important;
       }
       canvas {
         display: block;
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 1; /* Puts the canvas video texture in the background */
+        z-index: 1;
       }
-      /* UI Container to hold the buttons safely on top of everything */
       .ui-container {
         position: absolute;
         top: 20px;
         left: 20px;
-        z-index: 100; /* Forces buttons to sit on top of the canvas */
+        z-index: 100;
         display: flex;
         gap: 15px;
       }
-      /* Native, mobile-responsive button styling */
       .video-btn {
         padding: 12px 16px;
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #000000;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      .video-btn:active {
+        background-color: #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <!-- Clean HTML Buttons -->
+    <div class="ui-container">
+      <button class="video-btn" onclick="playVid1()">The Boiled One</button>
+      <button class="video-btn" onclick="playVid2()">The Boy and the Bath</button>
+    </div>
+    
+    <!-- Video Streams -->
+    <video id="boiledVideo" src="./boiled_one.mp4" playsinline muted autoplay loop style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
+    <video id="bathVideo" src="./boy_bath.mp4" playsinline muted autoplay loop style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
+
+    <script>
+      let currentVidElement = null;
+      let vid1, vid2;
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        vid1 = document.getElementById('boiledVideo');
+        vid2 = document.getElementById('bathVideo');
+        
+        if(vid1) vid1.pause();
+        if(vid2) vid2.pause();
+      }
+
+      function draw() {
+        background(15, 25, 45);
+        
+        if (currentVidElement) {
+          let p5wrapper = new p5.MediaElement(currentVidElement);
+          image(p5wrapper, 0, 0, width, height);
+        } else {
+          fill(255);
+          noStroke();
+          textAlign(CENTER, CENTER);
+          textSize(20);
+          text("Tap a button above to play", width / 2, height / 2);
+        }
+      }
+
+      function playVid1() {
+        if (vid2) vid2.pause();
+        if (vid1) {
+          vid1.play().catch(e => console.log(e));
+          currentVidElement = vid1;
+        }
+      }
+
+      function playVid2() {
+        if (vid1) vid1.pause();
+        if (vid2) {
+          vid2.play().catch(e => console.log(e));
+          currentVidElement = vid2;
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+    </script>
+  </body>
+</html>
         background-color: #ffffff;
         color: #000000;
         border: 2px solid #000000;
