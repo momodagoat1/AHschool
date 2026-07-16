@@ -1,40 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video App</title>
-    
-    <!-- Certified p5.js library -->
-    <script src="https://jsdelivr.net"></script>
-    
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #0b152d !important;
-      }
-      canvas {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-      }
-      .ui-container {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 100;
-        display: flex;
-        gap: 15px;
-      }
-      .video-btn {
-        padding: 12px 16px;
-        background-color: #ffffff;
-        color: #000000;
-        border: 2px solid #000000;
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Video App</title>
+
+<!-- p5.js -->
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #0b152d;
+}
+
+canvas {
+    display: block;
+}
+
+.ui-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+.video-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="ui-container">
+    <button class="video-btn" onclick="playVid1()">The Boiled One</button>
+    <button class="video-btn" onclick="playVid2()">The Boy and the Bath</button>
+</div>
+
+<video
+id="boiledVideo"
+src="boiled_one.mp4"
+playsinline
+muted
+loop
+style="display:none;">
+</video>
+
+<video
+id="bathVideo"
+src="boy_bath.mp4"
+playsinline
+muted
+loop
+style="display:none;">
+</video>
+
+<script>
+
+let currentVideo = null;
+let vid1, vid2;
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+
+    vid1 = document.getElementById("boiledVideo");
+    vid2 = document.getElementById("bathVideo");
+}
+
+function draw() {
+
+    background(15,25,45);
+
+    if(currentVideo){
+        image(currentVideo,0,0,width,height);
+    }else{
+        fill(255);
+        textAlign(CENTER,CENTER);
+        textSize(24);
+        text("Tap a button above",width/2,height/2);
+    }
+
+}
+
+function playVid1(){
+
+    if(vid2){
+        vid2.pause();
+        vid2.currentTime = 0;
+    }
+
+    vid1.play();
+    currentVideo = vid1;
+
+}
+
+function playVid2(){
+
+    if(vid1){
+        vid1.pause();
+        vid1.currentTime = 0;
+    }
+
+    vid2.play();
+    currentVideo = vid2;
+
+}
+
+function windowResized(){
+    resizeCanvas(windowWidth,windowHeight);
+}
+
+</script>
+
+</body>
+</html>        border: 2px solid #000000;
         border-radius: 6px;
         font-weight: bold;
         font-size: 14px;
