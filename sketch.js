@@ -1,39 +1,79 @@
-let currentVid;
-let vid1;
-let vid2;
-let button1;
-let button2;
-let vid1Loaded = false;
-let vid2Loaded = false;
+let currentVidElement = null;
+let vid1, vid2;
+let button1, button2;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
-  // 1. Create the videos with explicit callbacks
-  vid1 = createVideo(['./boiled_one.mp4'], () => { vid1Loaded = true; }); 
-  vid2 = createVideo(['./boy_bath.mp4'], () => { vid2Loaded = true; }); 
+  // Grab the native HTML video elements directly (Bypasses p5.js createVideo bug)
+  vid1 = document.getElementById('boiledVideo');
+  vid2 = document.getElementById('bathVideo');
   
-  // 2. FOR ANDROID/MOBILE: Force inline playback and mute the elements natively
-  // This stops Android from hijacking the stream or blocking execution
-  vid1.elt.setAttribute('playsinline', '');
-  vid1.elt.setAttribute('muted', '');
-  vid2.elt.setAttribute('playsinline', '');
-  vid2.elt.setAttribute('muted', '');
+  // Pause them immediately until a button is clicked
+  if(vid1) vid1.pause();
+  if(vid2) vid2.pause();
 
-  // Hide the default HTML player elements
-  vid1.hide();
-  vid2.hide();
-  
-  // Redundant safety mute for p5.js engine
-  vid1.volume(0);
-  vid2.volume(0);
-
-  // Button 1
+  // Button 1 Setup
   button1 = createButton('The Boiled One');
   button1.position(20, 20);
   button1.mousePressed(playVid1);
   styleButton(button1);
 
+  // Button 2 Setup
+  button2 = createButton('The Boy and the Bath');
+  button2.position(180, 20); 
+  button2.mousePressed(playVid2);
+  styleButton(button2);
+}
+
+function draw() {
+  // Deep Blue background proves canvas is running and rendering!
+  background(15, 25, 45); 
+  
+  if (currentVidElement) {
+    // Wrap native HTML element into a temporary p5 graphics wrapper to draw safely
+    let p5wrapper = new p5.MediaElement(currentVidElement);
+    image(p5wrapper, 0, 0, width, height);
+  } else {
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text("Tap a button above to play", width / 2, height / 2);
+  }
+}
+
+function playVid1() {
+  if (vid2) vid2.pause();
+  if (vid1) {
+    vid1.play().catch(e => console.log("Play blocked:", e));
+    currentVidElement = vid1;
+  }
+}
+
+function playVid2() {
+  if (vid1) vid1.pause();
+  if (vid2) {
+    vid2.play().catch(e => console.log("Play blocked:", e));
+    currentVidElement = vid2;
+  }
+}
+
+function styleButton(btn) {
+  btn.style('padding', '12px 16px');
+  btn.style('background-color', '#ffffff');
+  btn.style('color', '#000000');
+  btn.style('border', '2px solid #000');
+  btn.style('border-radius', '6px');
+  btn.style('cursor', 'pointer');
+  btn.style('font-weight', 'bold');
+  btn.style('font-size', '14px');
+  btn.style('z-index', '9999'); 
+  btn.style('touch-action', 'manipulation'); 
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
   // Button 2
   button2 = createButton('The Boy and the Bath');
   button2.position(180, 20); 
