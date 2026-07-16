@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video App</title>
     
-    <!-- Using the official, certified p5.js CDN link -->
+    <!-- Certified p5.js library -->
     <script src="https://jsdelivr.net"></script>
     
     <style>
@@ -13,27 +13,105 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-color: #0b152d !important; /* Forces a deep blue background instantly */
+        background-color: #0b152d !important; /* The dark blue background */
       }
       canvas {
         display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1; /* Puts the canvas video texture in the background */
+      }
+      /* UI Container to hold the buttons safely on top of everything */
+      .ui-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 100; /* Forces buttons to sit on top of the canvas */
+        display: flex;
+        gap: 15px;
+      }
+      /* Native, mobile-responsive button styling */
+      .video-btn {
+        padding: 12px 16px;
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #000000;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        touch-action: manipulation; /* Fixes mobile tap delay */
+      }
+      .video-btn:active {
+        background-color: #e0e0e0;
       }
     </style>
   </head>
   <body>
     
-    <!-- Hidden native mobile-optimized video elements -->
+    <!-- Native HTML Buttons (Guaranteed to show up on your phone!) -->
+    <div class="ui-container">
+      <button class="video-btn" onclick="playVid1()">The Boiled One</button>
+      <button class="video-btn" onclick="playVid2()">The Boy and the Bath</button>
+    </div>
+    
+    <!-- Hidden native video tags -->
     <video id="boiledVideo" src="./boiled_one.mp4" playsinline muted autoplay loop style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
     <video id="bathVideo" src="./boy_bath.mp4" playsinline muted autoplay loop style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
 
     <script>
-      // All your JavaScript is now safely inside the HTML file
       let currentVidElement = null;
       let vid1, vid2;
-      let button1, button2;
 
       function setup() {
         createCanvas(windowWidth, windowHeight);
+        
+        // Grab the videos from the HTML
+        vid1 = document.getElementById('boiledVideo');
+        vid2 = document.getElementById('bathVideo');
+        
+        if(vid1) vid1.pause();
+        if(vid2) vid2.pause();
+      }
+
+      function draw() {
+        background(15, 25, 45); // Dark blue canvas background
+        
+        if (currentVidElement) {
+          let p5wrapper = new p5.MediaElement(currentVidElement);
+          image(p5wrapper, 0, 0, width, height);
+        } else {
+          fill(255);
+          textAlign(CENTER, CENTER);
+          textSize(20);
+          text("Tap a button above to play", width / 2, height / 2);
+        }
+      }
+
+      // Button click handlers
+      function playVid1() {
+        if (vid2) vid2.pause();
+        if (vid1) {
+          vid1.play().catch(e => console.log(e));
+          currentVidElement = vid1;
+        }
+      }
+
+      function playVid2() {
+        if (vid1) vid1.pause();
+        if (vid2) {
+          vid2.play().catch(e => console.log(e));
+          currentVidElement = vid2;
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+    </script>
+  </body>
+</html>
         
         vid1 = document.getElementById('boiledVideo');
         vid2 = document.getElementById('bathVideo');
